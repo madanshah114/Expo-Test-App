@@ -1,0 +1,48 @@
+trigger:
+  branches:
+    include:
+    - '*'  # Trigger on all branches for builds
+
+pr:  # Trigger on pull request events for preview builds
+  branches:
+    include:
+    - '*'  # Trigger on PRs targeting all branches
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: ExpoBuild
+  displayName: 'Expo Build Job'
+  steps:
+  - checkout: self
+
+  - script: |
+      nvm install 14.x
+      nvm use 14.x
+    displayName: 'Set up Node'
+
+  - script: yarn install
+    displayName: 'Install dependencies'
+
+  # Expo EAS CLI installation
+  - script: npm install -g eas-cli
+    displayName: 'Install EAS CLI'
+
+  # Run tests (if applicable)
+  - script: yarn test
+    displayName: 'Run tests'
+
+  # Expo EAS build
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        eas build --platform all --profile preview --non-interactive
+      else
+        eas build --platform all --profile production --non-interactive
+      fi
+    displayName: 'Build with EAS CLI'
+
+  # Post-build steps (e.g., handling artifacts, notifications)
+  # Custom scripts or tasks can be added here.
+
+# Additional configurations like environment variables, secrets, and post-build actions should be adjusted according to your project requirements.
