@@ -17,10 +17,12 @@ jobs:
   steps:
   - checkout: self
 
-  - script: |
-      nvm install 18.x
-      nvm use 18.x
-    displayName: 'Set up Node'
+  - name: Install NVM
+    run: |
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
   - script: yarn install
     displayName: 'Install dependencies'
