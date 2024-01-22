@@ -40,10 +40,9 @@ jobs:
   # Expo EAS CLI installation
   - script: |
       printenv
-      npm install -g expo-cli
-      expo login -t $(EXPO_TOKEN)
-      expo publish --non-interactive
-      displayName: 'Publish Expo project'
+      npm install -g expo-cli@latest
+      echo n | expo publish --token $(EXPO_TOKEN)
+      displayName: 'Update and Publish Expo project'
   # Run tests (if applicable)
   # - script: yarn run test
   #   displayName: 'Run tests'
