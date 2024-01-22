@@ -1,0 +1,68 @@
+trigger:
+  branches:
+    include:
+    - '*'  # Trigger on all branches for builds
+
+pr:  # Trigger on pull request events for preview builds
+  branches:
+    include:
+    - '*'  # Trigger on PRs targeting all branches
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: ExpoBuild
+  displayName: 'Expo Build Job'
+  steps:
+  - checkout: self
+
+# <<<<<<< HEAD
+#   - name: Install NVM
+#     run: |
+#       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+#       export NVM_DIR="$HOME/.nvm"
+#       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# =======
+#   - script: |
+#       nvm install 18.x
+#       nvm use 18.x
+#     displayName: 'Set up Node'
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'spec'
+      versionSpec: '19.x'
+      checkLatest: true
+  - script: yarn install
+    displayName: 'Install dependencies'
+
+  # Expo EAS CLI installation
+  - script: |
+      printenv
+      # npm install -g expo-cli@latest
+      # expo login --non-interactive -u $(EXPO_TOKEN)
+      # expo upgrade
+      npm install -g eas-cli@latest
+      yarn global add eas-cli
+
+      echo "Print EXPO_TOKEN"
+      echo $(EXPO_TOKEN)
+    displayName: 'Update and Publish Expo project'
+  # Run tests (if applicable)
+  # - script: yarn run test
+  #   displayName: 'Run tests'
+
+  # Expo EAS build
+  - script: |
+      if [ "$(Build.Reason)" == "PullRequest" ]; then
+        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform ios --profile preview --non-interactive
+      else
+        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform ios --profile production --non-interactive
+      fi
+    displayName: 'Build with EAS CLI'
+
+  # Post-build steps (e.g., handling artifacts, notifications)
+  # Custom scripts or tasks can be added here.
+
+# Additional configurations like environment variables, secrets, and post-build actions should be adjusted according to your project requirements.
