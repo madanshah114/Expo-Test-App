@@ -38,9 +38,10 @@ jobs:
     displayName: 'Install dependencies'
 
   # Expo EAS CLI installation
-  - script: npm install -g eas-cli
-    displayName: 'Install EAS CLI'
-
+  - script: |
+      npm install -g expo-cli
+      expo publish --non-interactive --token $(dlOpfJe4FTyEZGfQmqMM1KS6Sjw8jCgdoIYF01QS)
+    displayName: 'Publish Expo project'
   # Run tests (if applicable)
   # - script: yarn run test
   #   displayName: 'Run tests'
