@@ -55,9 +55,9 @@ jobs:
   # Expo EAS build
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
-        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform all --profile preview --non-interactive
+        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile preview --non-interactive
       else
-        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform all --profile production --non-interactive
+        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile production --non-interactive
       fi
     displayName: 'Build with EAS CLI'
 
