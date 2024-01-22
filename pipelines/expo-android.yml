@@ -32,7 +32,7 @@ jobs:
   - task: NodeTool@0
     inputs:
       versionSource: 'spec'
-      versionSpec: '16.x'
+      versionSpec: '19.x'
       checkLatest: true
   - script: yarn install
     displayName: 'Install dependencies'
