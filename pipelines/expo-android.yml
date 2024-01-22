@@ -43,7 +43,7 @@ jobs:
       # npm install -g expo-cli@latest
       # expo login --non-interactive -u $(EXPO_TOKEN)
       # expo upgrade
-      npm install -g eas-cli
+      npm install -g eas-cli@latest
 
       echo "Print EXPO_TOKEN"
       echo $(EXPO_TOKEN)
