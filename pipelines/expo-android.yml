@@ -21,6 +21,11 @@ jobs:
       nvm install 18.x
       nvm use 18.x
     displayName: 'Set up Node'
+  - task: NodeTool@0
+    inputs:
+      versionSource: 'spec'
+      versionSpec: '18.x'
+      checkLatest: true
 
   - script: yarn install
     displayName: 'Install dependencies'
