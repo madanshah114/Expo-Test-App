@@ -18,8 +18,8 @@ jobs:
   - checkout: self
 
   - script: |
-      nvm install 14.x
-      nvm use 14.x
+      nvm install 18.x
+      nvm use 18.x
     displayName: 'Set up Node'
 
   - script: yarn install
