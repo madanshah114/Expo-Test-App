@@ -41,7 +41,8 @@ jobs:
   - script: |
       printenv
       npm install -g expo-cli@latest
-      echo n | expo publish --token $(EXPO_TOKEN)
+      expo login --non-interactive -u $(EXPO_TOKEN)
+      expo upgrade
       displayName: 'Update and Publish Expo project'
   # Run tests (if applicable)
   # - script: yarn run test
