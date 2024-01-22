@@ -4,6 +4,7 @@ trigger:
 #     include:
 #     - '*'  # Trigger on all branches for builds
 
+
 # pr:  # Trigger on pull request events for preview builds
 #   branches:
 #     include:
