@@ -1,12 +1,13 @@
 trigger:
-  branches:
-    include:
-    - '*'  # Trigger on all branches for builds
+  none
+#   branches:
+#     include:
+#     - '*'  # Trigger on all branches for builds
 
-pr:  # Trigger on pull request events for preview builds
-  branches:
-    include:
-    - '*'  # Trigger on PRs targeting all branches
+# pr:  # Trigger on pull request events for preview builds
+#   branches:
+#     include:
+#     - '*'  # Trigger on PRs targeting all branches
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -36,6 +37,17 @@ jobs:
       checkLatest: true
   - script: yarn install
     displayName: 'Install dependencies'
+
+  - script: |
+      npm install -g pnpm
+
+      pnpm version
+    displayName: 'Install pnpm'
+
+  - script: |
+      pnpm run lint
+    displayName: 'Run lint'
+
 
   # Expo EAS CLI installation
   - script: |

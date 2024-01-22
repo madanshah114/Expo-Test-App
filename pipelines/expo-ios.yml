@@ -1,12 +1,13 @@
 trigger:
-  branches:
-    include:
-    - '*'  # Trigger on all branches for builds
+  none
+#   branches:
+#     include:
+#     - '*'  # Trigger on all branches for builds
 
-pr:  # Trigger on pull request events for preview builds
-  branches:
-    include:
-    - '*'  # Trigger on PRs targeting all branches
+# pr:  # Trigger on pull request events for preview builds
+#   branches:
+#     include:
+#     - '*'  # Trigger on PRs targeting all branches
 
 pool:
   vmImage: 'ubuntu-latest'
