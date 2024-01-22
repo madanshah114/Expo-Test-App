@@ -40,9 +40,9 @@ jobs:
   # Expo EAS CLI installation
   - script: |
       printenv
-      # npm install -g expo-cli@latest
-      # expo login --non-interactive -u $(EXPO_TOKEN)
-      # expo upgrade
+      npm install -g expo-cli@latest
+      expo login --non-interactive -u $(EXPO_TOKEN)
+      expo upgrade
       yarn global add eas-cli
 
       echo "Print EXPO_TOKEN"
