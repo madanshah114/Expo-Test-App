@@ -43,7 +43,6 @@ jobs:
       # npm install -g expo-cli@latest
       # expo login --non-interactive -u $(EXPO_TOKEN)
       # expo upgrade
-      npm install -g eas-cli@latest
       yarn global add eas-cli
 
       echo "Print EXPO_TOKEN"
