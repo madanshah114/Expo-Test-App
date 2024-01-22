@@ -1,7 +1,7 @@
-trigger:
-  branches:
-    include:
-    - '*'  # Trigger on all branches for builds
+trigger: none
+  # branches:
+  #   include:
+  #   - '*'  # Trigger on all branches for builds
 
 pr:  # Trigger on pull request events for preview builds
   branches:
