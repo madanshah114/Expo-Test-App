@@ -42,7 +42,7 @@ jobs:
     displayName: 'Install EAS CLI'
 
   # Run tests (if applicable)
-  - script: yarn test
+  - script: yarn run test
     displayName: 'Run tests'
 
   # Expo EAS build
