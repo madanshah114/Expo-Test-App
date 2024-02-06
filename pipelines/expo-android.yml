@@ -6,52 +6,73 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-- job: ExpoBuild
-  displayName: 'Expo Build Job'
-  steps:
-  - checkout: self
+steps:
+- script: |
+    echo "test file." > $(Build.ArtifactStagingDirectory)/test.txt
+  displayName: 'Create Text File'
 
-  - task: NodeTool@0
-    inputs:
-      versionSource: 'spec'
-      versionSpec: '19.x'
-      checkLatest: true
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/sample.zip'
+    replaceExistingArchive: true
+  displayName: 'Zip Text File'
 
-  - script: yarn install
-    displayName: 'Install dependencies'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/sample.zip'
+    artifactName: 'test'
+    publishLocation: 'Container'
+    displayName: 'publish zip'
 
-  - script: |
-      npm install -g pnpm
-      pnpm version
-    displayName: 'Install pnpm'
+# jobs:
+# - job: ExpoBuild
+#   displayName: 'Expo Build Job'
+#   steps:
+#   - checkout: self
 
-  - script: |
-      pnpm run lint
-    displayName: 'Run lint'
+#   - task: NodeTool@0
+#     inputs:
+#       versionSource: 'spec'
+#       versionSpec: '19.x'
+#       checkLatest: true
 
-  - script: |
-      npm install -g eas-cli@latest
-      yarn global add eas-cli
-    displayName: 'Install EAS CLI'
+#   - script: yarn install
+#     displayName: 'Install dependencies'
 
-  - script: |
-      if [ "$(Build.Reason)" == "PullRequest" ]; then
-        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile preview --non-interactive
-      else
-        EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile production --non-interactive
-      fi
-    displayName: 'Build with EAS CLI'
+#   - script: |
+#       npm install -g pnpm
+#       pnpm version
+#     displayName: 'Install pnpm'
 
-  - task: CopyFiles@2
-    inputs:
-      SourceFolder: '$(System.DefaultWorkingDirectory)/build'
-      Contents: '**/*.apk'  # Adjust the pattern according to your artifact's extension
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+#   - script: |
+#       pnpm run lint
+#     displayName: 'Run lint'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'android-build'
-      publishLocation: 'Container'
+#   - script: |
+#       npm install -g eas-cli@latest
+#       yarn global add eas-cli
+#     displayName: 'Install EAS CLI'
+
+#   - script: |
+#       if [ "$(Build.Reason)" == "PullRequest" ]; then
+#         EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile preview --non-interactive
+#       else
+#         EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile production --non-interactive
+#       fi
+#     displayName: 'Build with EAS CLI'
+
+#   - task: CopyFiles@2
+#     inputs:
+#       SourceFolder: '$(System.DefaultWorkingDirectory)/build'
+#       Contents: '**/*.apk'  # Adjust the pattern according to your artifact's extension
+#       TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+#   - task: PublishBuildArtifacts@1
+#     inputs:
+#       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#       ArtifactName: 'android-build'
+#       publishLocation: 'Container'
     
