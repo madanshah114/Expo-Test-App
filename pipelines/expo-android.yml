@@ -1,14 +1,7 @@
 trigger:
-  none
-#   branches:
-#     include:
-#     - '*'  # Trigger on all branches for builds
-
-
-# pr:  # Trigger on pull request events for preview builds
-#   branches:
-#     include:
-#     - '*'  # Trigger on PRs targeting all branches
+  branches:
+    include:
+      - master
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -19,29 +12,17 @@ jobs:
   steps:
   - checkout: self
 
-# <<<<<<< HEAD
-#   - name: Install NVM
-#     run: |
-#       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-#       export NVM_DIR="$HOME/.nvm"
-#       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# =======
-#   - script: |
-#       nvm install 18.x
-#       nvm use 18.x
-#     displayName: 'Set up Node'
   - task: NodeTool@0
     inputs:
       versionSource: 'spec'
       versionSpec: '19.x'
       checkLatest: true
+
   - script: yarn install
     displayName: 'Install dependencies'
 
   - script: |
       npm install -g pnpm
-
       pnpm version
     displayName: 'Install pnpm'
 
@@ -49,24 +30,11 @@ jobs:
       pnpm run lint
     displayName: 'Run lint'
 
-
-  # Expo EAS CLI installation
   - script: |
-      printenv
-      # npm install -g expo-cli@latest
-      # expo login --non-interactive -u $(EXPO_TOKEN)
-      # expo upgrade
       npm install -g eas-cli@latest
       yarn global add eas-cli
+    displayName: 'Install EAS CLI'
 
-      echo "Print EXPO_TOKEN"
-      echo $(EXPO_TOKEN)
-    displayName: 'Update and Publish Expo project'
-  # Run tests (if applicable)
-  # - script: yarn run test
-  #   displayName: 'Run tests'
-
-  # Expo EAS build
   - script: |
       if [ "$(Build.Reason)" == "PullRequest" ]; then
         EXPO_TOKEN=$(EXPO_TOKEN) eas build --platform android --profile preview --non-interactive
@@ -75,7 +43,14 @@ jobs:
       fi
     displayName: 'Build with EAS CLI'
 
-  # Post-build steps (e.g., handling artifacts, notifications)
-  # Custom scripts or tasks can be added here.
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: '$(System.DefaultWorkingDirectory)/build'
+      Contents: '**/*.apk'  # Adjust the pattern according to your artifact's extension
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# Additional configurations like environment variables, secrets, and post-build actions should be adjusted according to your project requirements.
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'android-build'
+      publishLocation: 'Container'
