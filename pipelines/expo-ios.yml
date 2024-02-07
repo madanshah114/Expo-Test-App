@@ -1,5 +1,5 @@
 trigger:
-  - master
+  - none
 #   branches:
 #     include:
 #     - '*'  # Trigger on all branches for builds
