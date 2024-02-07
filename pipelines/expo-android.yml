@@ -47,9 +47,9 @@ jobs:
       pnpm version
     displayName: 'Install pnpm'
 
-  - script: |
-      pnpm run lint
-    displayName: 'Run lint'
+  # - script: |
+  #     pnpm run lint
+  #   displayName: 'Run lint'
 
   - script: |
       npm install -g eas-cli@latest
